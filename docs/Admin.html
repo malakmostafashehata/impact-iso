@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMPACT OS – Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --admin: #1e1b4b;
+      --admin2: #312e81;
+      --accent: #f59e0b;
+      --green: #059669;
+      --green-l: #d1fae5;
+      --red: #dc2626;
+      --red-l: #fee2e2;
+      --blue: #2563eb;
+      --blue-l: #dbeafe;
+      --purple: #7c3aed;
+      --purple-l: #ede9fe;
+      --bg: #0f0e1a;
+      --surface: #1a1830;
+      --surface2: #231f3a;
+      --border: rgba(255,255,255,.1);
+      --text: #f1f0ff;
+      --muted: #9ca3af;
+      --radius: 14px;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); font-family:'Plus Jakarta Sans',sans-serif; color:var(--text); min-height:100vh; }
+
+    /* LAYOUT */
+    .layout { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
+
+    /* SIDEBAR NAV */
+    .sidenav {
+      background:var(--surface);
+      border-right:1px solid var(--border);
+      padding:24px 16px;
+      display:flex; flex-direction:column;
+      position:sticky; top:0; height:100vh; overflow-y:auto;
+    }
+    .brand { display:flex;align-items:center;gap:10px;padding:4px 8px 24px; }
+    .brand-icon { width:36px;height:36px;background:linear-gradient(135deg,var(--accent),#f97316);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:1rem; }
+    .brand-text { font-weight:800;font-size:1.1rem; }
+    .brand-sub { font-size:.65rem;color:var(--muted);font-weight:500;letter-spacing:.5px;text-transform:uppercase; }
+    .nav-section { font-size:.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:8px 12px;margin-top:8px; }
+    .nav-item {
+      display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;
+      cursor:pointer;font-size:.85rem;font-weight:600;color:var(--muted);
+      transition:.15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;
+    }
+    .nav-item:hover { background:var(--surface2);color:var(--text); }
+    .nav-item.active { background:linear-gradient(90deg,rgba(245,158,11,.15),transparent);color:var(--accent);border-left:3px solid var(--accent); }
+    .nav-item .badge2 { margin-left:auto;background:var(--accent);color:var(--admin);font-size:.6rem;padding:2px 7px;border-radius:20px;font-weight:800; }
+    .nav-bottom { margin-top:auto;border-top:1px solid var(--border);padding-top:16px; }
+
+    /* TOPBAR */
+    .topbar {
+      background:var(--surface);border-bottom:1px solid var(--border);
+      padding:16px 28px;display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100;
+    }
+    .page-title { font-weight:800;font-size:1.1rem; }
+    .page-subtitle { font-size:.78rem;color:var(--muted); }
+    .topbar-actions { display:flex;align-items:center;gap:12px; }
+    .icon-btn { width:36px;height:36px;background:var(--surface2);border:none;border-radius:9px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:.2s; }
+    .icon-btn:hover { background:rgba(245,158,11,.15);color:var(--accent); }
+    .admin-pill { display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--surface2);padding:6px 14px 6px 6px;border-radius:50px;border:none;transition:.2s; }
+    .admin-pill:hover { background:rgba(245,158,11,.1); }
+    .admin-av { width:28px;height:28px;background:linear-gradient(135deg,var(--accent),#f97316);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:white; }
+    .admin-pill span { font-size:.82rem;font-weight:700; }
+
+    /* CONTENT */
+    .content { padding:28px; overflow-y:auto; }
+
+    /* STAT CARDS */
+    .admin-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px; }
+    .astat {
+      background:var(--surface);border-radius:var(--radius);padding:20px;
+      border:1px solid var(--border);cursor:pointer;transition:.2s;
+    }
+    .astat:hover { border-color:rgba(245,158,11,.4);transform:translateY(-2px); }
+    .astat-icon { width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:14px; }
+    .ai-amber { background:rgba(245,158,11,.15);color:var(--accent); }
+    .ai-green { background:rgba(5,150,105,.15);color:var(--green); }
+    .ai-blue  { background:rgba(37,99,235,.15);color:var(--blue); }
+    .ai-red   { background:rgba(220,38,38,.15);color:var(--red); }
+    .astat-val { font-size:1.9rem;font-weight:800;line-height:1; }
+    .astat-label { font-size:.75rem;color:var(--muted);margin-top:6px; }
+    .astat-change { font-size:.72rem;margin-top:8px;font-weight:600; }
+    .pos { color:var(--green); } .neg { color:var(--red); }
+
+    /* GRID */
+    .admin-grid { display:grid;grid-template-columns:1fr 340px;gap:22px; }
+
+    /* TABLE */
+    .card { background:var(--surface);border-radius:var(--radius);padding:22px;border:1px solid var(--border); }
+    .card-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:18px; }
+    .card-title { font-size:.95rem;font-weight:700; }
+    .search-input {
+      background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 12px;color:var(--text);font-size:.8rem;outline:none;font-family:inherit;
+      width:200px;transition:.2s;
+    }
+    .search-input:focus { border-color:var(--accent); }
+    .search-input::placeholder { color:var(--muted); }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;font-size:.82rem; }
+    th { padding:10px 12px;text-align:left;color:var(--muted);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border); }
+    td { padding:12px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle; }
+    tr:hover td { background:var(--surface2); }
+    .user-cell { display:flex;align-items:center;gap:10px; }
+    .user-av { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0; }
+    .user-name { font-weight:600;font-size:.85rem; }
+    .user-email { font-size:.72rem;color:var(--muted); }
+    .role-badge { font-size:.68rem;padding:3px 9px;border-radius:20px;font-weight:700; }
+    .rb-admin { background:rgba(245,158,11,.15);color:var(--accent); }
+    .rb-contrib { background:var(--purple-l);color:var(--purple); }
+    .rb-viewer { background:var(--surface2);color:var(--muted); }
+    .status-dot { width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px; }
+    .s-active { background:var(--green); }
+    .s-inactive { background:var(--muted); }
+    .s-pending { background:var(--accent); }
+    .table-actions { display:flex;gap:6px; }
+    .tbl-btn { width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center;transition:.2s; }
+    .tbl-edit { background:var(--blue-l);color:var(--blue); }
+    .tbl-edit:hover { background:var(--blue);color:white; }
+    .tbl-del { background:var(--red-l);color:var(--red); }
+    .tbl-del:hover { background:var(--red);color:white; }
+    .tbl-view { background:var(--purple-l);color:var(--purple); }
+    .tbl-view:hover { background:var(--purple);color:white; }
+
+    /* RIGHT PANEL */
+    .pending-item {
+      background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:12px;
+      cursor:pointer;transition:.2s;border:1px solid transparent;
+    }
+    .pending-item:hover { border-color:var(--accent); }
+    .pi-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:6px; }
+    .pi-name { font-size:.85rem;font-weight:700; }
+    .pi-type { font-size:.65rem;padding:3px 8px;border-radius:20px;font-weight:700; }
+    .pt-apply { background:rgba(245,158,11,.15);color:var(--accent); }
+    .pt-project { background:var(--purple-l);color:var(--purple); }
+    .pt-skill { background:var(--green-l);color:var(--green); }
+    .pi-desc { font-size:.75rem;color:var(--muted);margin-bottom:10px; }
+    .pi-actions { display:flex;gap:8px; }
+    .btn-approve { flex:1;padding:7px;background:rgba(5,150,105,.15);color:var(--green);border:1px solid rgba(5,150,105,.3);border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s; }
+    .btn-approve:hover { background:var(--green);color:white; }
+    .btn-reject { flex:1;padding:7px;background:rgba(220,38,38,.1);color:var(--red);border:1px solid rgba(220,38,38,.2);border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s; }
+    .btn-reject:hover { background:var(--red);color:white; }
+
+    /* QUICK ACTIONS */
+    .quick-actions { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px; }
+    .qa-btn {
+      background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
+      padding:14px 10px;cursor:pointer;text-align:center;transition:.2s;color:var(--text);
+      font-family:inherit;font-size:.75rem;font-weight:600;
+    }
+    .qa-btn:hover { border-color:var(--accent);background:rgba(245,158,11,.07);color:var(--accent); }
+    .qa-icon { font-size:1.2rem;margin-bottom:6px; }
+
+    /* MODAL */
+    .modal-overlay {
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+      z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);
+    }
+    .modal-overlay.show { display:flex; }
+    .modal-box {
+      background:var(--surface);border-radius:20px;padding:28px;max-width:480px;width:90%;
+      border:1px solid var(--border);animation:popIn .25s ease;
+    }
+    @keyframes popIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+    .modal-title { font-size:1rem;font-weight:800;margin-bottom:6px; }
+    .modal-sub { font-size:.82rem;color:var(--muted);margin-bottom:20px; }
+    .form-group { margin-bottom:14px; }
+    .form-group label { font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:6px;display:block; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);
+      border-radius:10px;color:var(--text);font-family:inherit;font-size:.85rem;outline:none;transition:.2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color:var(--accent); }
+    .form-group select option { background:var(--surface2); }
+    .modal-actions { display:flex;gap:10px;margin-top:20px; }
+    .btn-confirm { flex:1;padding:11px;background:var(--accent);color:var(--admin);border:none;border-radius:10px;font-weight:800;cursor:pointer;transition:.2s;font-family:inherit; }
+    .btn-confirm:hover { opacity:.9; }
+    .btn-dismiss { flex:1;padding:11px;background:var(--surface2);color:var(--muted);border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit; }
+    .btn-dismiss:hover { background:rgba(255,255,255,.1); }
+
+    /* TOAST */
+    .toast-container { position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px; }
+    .toast {
+      background:var(--surface);border-radius:10px;padding:12px 16px;box-shadow:0 8px 32px rgba(0,0,0,.4);
+      display:flex;align-items:center;gap:10px;min-width:240px;border-left:3px solid var(--green);
+      animation:slideUp .3s ease;font-size:.82rem;font-weight:600;
+    }
+    .toast.error { border-left-color:var(--red); }
+    .toast.warn { border-left-color:var(--accent); }
+    @keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+    /* SECTION PAGES */
+    .section-page { display:none; }
+    .section-page.active { display:block; }
+
+    /* ANALYTICS BARS */
+    .analytics-row { display:flex;align-items:center;gap:12px;margin-bottom:12px; }
+    .analytics-label { font-size:.8rem;color:var(--muted);width:140px;flex-shrink:0; }
+    .analytics-bar-bg { flex:1;height:8px;background:var(--surface2);border-radius:8px;overflow:hidden; }
+    .analytics-bar-fill { height:100%;border-radius:8px;transition:width 1s; }
+    .analytics-val { font-size:.78rem;font-weight:700;width:40px;text-align:right; }
+
+    /* PROFILE DROPDOWN */
+    .admin-dropdown {
+      display:none;position:fixed;top:68px;right:24px;width:200px;
+      background:var(--surface);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.5);
+      z-index:500;padding:8px;border:1px solid var(--border);
+      animation:fadeDown .2s ease;
+    }
+    .admin-dropdown.show { display:block; }
+    @keyframes fadeDown { from{transform:translateY(-8px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .dd-item { padding:10px 12px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:10px;transition:.15s;color:var(--text); }
+    .dd-item:hover { background:var(--surface2); }
+
+    @media(max-width:900px) {
+      .layout { grid-template-columns:1fr; }
+      .sidenav { display:none; }
+      .admin-stats { grid-template-columns:repeat(2,1fr); }
+      .admin-grid { grid-template-columns:1fr; }
+      .quick-actions { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDE NAV -->
+  <aside class="sidenav">
+    <div class="brand">
+      <div class="brand-icon"><i class="fas fa-shield-alt"></i></div>
+      <div><div class="brand-text">IMPACT OS</div><div class="brand-sub">Admin Panel</div></div>
+    </div>
+
+    <div class="nav-section">Main</div>
+    <button class="nav-item active" onclick="switchSection('overview',this)"><i class="fas fa-th-large"></i> Overview</button>
+    <button class="nav-item" onclick="switchSection('users',this)"><i class="fas fa-users"></i> Users <span class="badge2">48</span></button>
+    <button class="nav-item" onclick="switchSection('projects',this)"><i class="fas fa-briefcase"></i> Projects</button>
+    <button class="nav-item" onclick="switchSection('analytics',this)"><i class="fas fa-chart-bar"></i> Analytics</button>
+
+    <div class="nav-section">Management</div>
+    <button class="nav-item" onclick="switchSection('pending',this)"><i class="fas fa-clock"></i> Pending <span class="badge2">5</span></button>
+    <button class="nav-item" onclick="switchSection('reports',this)"><i class="fas fa-file-alt"></i> Reports</button>
+    <button class="nav-item" onclick="switchSection('settings',this)"><i class="fas fa-cog"></i> Settings</button>
+
+    <div class="nav-bottom">
+      <button class="nav-item" onclick="window.open('employee-dashboard.html','_blank')"><i class="fas fa-arrow-left"></i> Employee View</button>
+      <button class="nav-item" onclick="adminLogout()" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div style="display:flex;flex-direction:column;overflow:hidden;">
+    <div class="topbar">
+      <div>
+        <div class="page-title" id="pageTitle">Overview</div>
+        <div class="page-subtitle" id="pageSubtitle">Welcome back, Admin Ahmed</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="openAddUserModal()"><i class="fas fa-user-plus"></i></button>
+        <button class="icon-btn" onclick="openNewProjectAdmin()"><i class="fas fa-plus"></i></button>
+        <button class="icon-btn" onclick="showToast('Refreshing data...','warn')"><i class="fas fa-sync-alt"></i></button>
+        <button class="admin-pill" onclick="toggleAdminDD()">
+          <div class="admin-av">A</div>
+          <span>Ahmed Admin</span>
+          <i class="fas fa-chevron-down ms-1" style="font-size:.6rem;color:var(--muted);margin-left:6px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ADMIN DROPDOWN -->
+    <div class="admin-dropdown" id="adminDD">
+      <div class="dd-item" onclick="openAdminProfile()"><i class="fas fa-user" style="color:var(--accent);"></i> My Profile</div>
+      <div class="dd-item" onclick="switchSection('settings',document.querySelector('[onclick*=settings]'))"><i class="fas fa-cog" style="color:var(--muted);"></i> Settings</div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+  <button id="logoutBtn">
+<i class="fas fa-sign-out-alt"></i> Logout
+</button>    </div>
+
+    <div class="content">
+
+      <!-- ===== OVERVIEW SECTION ===== -->
+      <div class="section-page active" id="section-overview">
+        <div class="admin-stats">
+          <div class="astat" onclick="switchSection('users',null)">
+            <div class="astat-icon ai-amber"><i class="fas fa-users"></i></div>
+            <div class="astat-val" id="totalUsers">48</div>
+            <div class="astat-label">Total Users</div>
+            <div class="astat-change pos">▲ +6 this week</div>
+          </div>
+          <div class="astat" onclick="switchSection('projects',null)">
+            <div class="astat-icon ai-blue"><i class="fas fa-briefcase"></i></div>
+            <div class="astat-val">12</div>
+            <div class="astat-label">Active Projects</div>
+            <div class="astat-change pos">▲ +2 this month</div>
+          </div>
+          <div class="astat">
+            <div class="astat-icon ai-green"><i class="fas fa-bolt"></i></div>
+            <div class="astat-val">24,850</div>
+            <div class="astat-label">Total Impact Points</div>
+            <div class="astat-change pos">▲ +1,240 this week</div>
+          </div>
+          <div class="astat" onclick="switchSection('pending',null)">
+            <div class="astat-icon ai-red"><i class="fas fa-clock"></i></div>
+            <div class="astat-val" id="pendingCount">5</div>
+            <div class="astat-label">Pending Approvals</div>
+            <div class="astat-change neg">▼ Needs attention</div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+          <button class="qa-btn" onclick="openAddUserModal()"><div class="qa-icon">👤</div>Add User</button>
+          <button class="qa-btn" onclick="openNewProjectAdmin()"><div class="qa-icon">📁</div>New Project</button>
+          <button class="qa-btn" onclick="switchSection('pending',null)"><div class="qa-icon">✅</div>Approvals</button>
+          <button class="qa-btn" onclick="openBroadcastModal()"><div class="qa-icon">📢</div>Broadcast</button>
+          <button class="qa-btn" onclick="exportData()"><div class="qa-icon">📊</div>Export</button>
+          <button class="qa-btn" onclick="switchSection('analytics',null)"><div class="qa-icon">📈</div>Analytics</button>
+        </div>
+
+        <div class="admin-grid">
+          <!-- USERS TABLE -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">All Users</div>
+              <input class="search-input" placeholder="🔍 Search users..." oninput="filterUsers(this.value)">
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Points</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTable">
+                  <tr data-name="sara elkholy">
+                    <td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">S</div><div><div class="user-name">Sara Elkholy</div><div class="user-email">sara@impactos.io</div></div></div></td>
+                    <td><span class="role-badge rb-contrib">Contributor</span></td>
+                    <td><span class="status-dot s-active"></span>Active</td>
+                    <td style="font-weight:700;color:var(--accent);">850</td>
+                    <td><div class="table-actions">
+                      <button class="tbl-btn tbl-view" onclick="viewUser('Sara Elkholy','sara@impactos.io','Contributor','Active',850)" title="View"><i class="fas fa-eye"></i></button>
+                      <button class="tbl-btn tbl-edit" onclick="editUser('Sara Elkholy')" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="tbl-btn tbl-del" onclick="deleteUser(this,'Sara Elkholy')" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div></td>
+                  </tr>
+                  <tr data-name="ahmed hassan">
+                    <td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#2563eb,#06b6d4);">A</div><div><div class="user-name">Ahmed Hassan</div><div class="user-email">ahmed@impactos.io</div></div></div></td>
+                    <td><span class="role-badge rb-admin">Admin</span></td>
+                    <td><span class="status-dot s-active"></span>Active</td>
+                    <td style="font-weight:700;color:var(--accent);">2,400</td>
+                    <td><div class="table-actions">
+                      <button class="tbl-btn tbl-view" onclick="viewUser('Ahmed Hassan','ahmed@impactos.io','Admin','Active',2400)" title="View"><i class="fas fa-eye"></i></button>
+                      <button class="tbl-btn tbl-edit" onclick="editUser('Ahmed Hassan')" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="tbl-btn tbl-del" onclick="deleteUser(this,'Ahmed Hassan')" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div></td>
+                  </tr>
+                  <tr data-name="nour ibrahim">
+                    <td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#059669,#10b981);">N</div><div><div class="user-name">Nour Ibrahim</div><div class="user-email">nour@impactos.io</div></div></div></td>
+                    <td><span class="role-badge rb-contrib">Contributor</span></td>
+                    <td><span class="status-dot s-pending"></span>Pending</td>
+                    <td style="font-weight:700;color:var(--accent);">320</td>
+                    <td><div class="table-actions">
+                      <button class="tbl-btn tbl-view" onclick="viewUser('Nour Ibrahim','nour@impactos.io','Contributor','Pending',320)" title="View"><i class="fas fa-eye"></i></button>
+                      <button class="tbl-btn tbl-edit" onclick="editUser('Nour Ibrahim')" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="tbl-btn tbl-del" onclick="deleteUser(this,'Nour Ibrahim')" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div></td>
+                  </tr>
+                  <tr data-name="karim mostafa">
+                    <td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#d97706,#f59e0b);">K</div><div><div class="user-name">Karim Mostafa</div><div class="user-email">karim@impactos.io</div></div></div></td>
+                    <td><span class="role-badge rb-viewer">Viewer</span></td>
+                    <td><span class="status-dot s-inactive"></span>Inactive</td>
+                    <td style="font-weight:700;color:var(--accent);">0</td>
+                    <td><div class="table-actions">
+                      <button class="tbl-btn tbl-view" onclick="viewUser('Karim Mostafa','karim@impactos.io','Viewer','Inactive',0)" title="View"><i class="fas fa-eye"></i></button>
+                      <button class="tbl-btn tbl-edit" onclick="editUser('Karim Mostafa')" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="tbl-btn tbl-del" onclick="deleteUser(this,'Karim Mostafa')" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div></td>
+                  </tr>
+                  <tr data-name="lina samir">
+                    <td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#db2777,#f43f5e);">L</div><div><div class="user-name">Lina Samir</div><div class="user-email">lina@impactos.io</div></div></div></td>
+                    <td><span class="role-badge rb-contrib">Contributor</span></td>
+                    <td><span class="status-dot s-active"></span>Active</td>
+                    <td style="font-weight:700;color:var(--accent);">1,100</td>
+                    <td><div class="table-actions">
+                      <button class="tbl-btn tbl-view" onclick="viewUser('Lina Samir','lina@impactos.io','Contributor','Active',1100)" title="View"><i class="fas fa-eye"></i></button>
+                      <button class="tbl-btn tbl-edit" onclick="editUser('Lina Samir')" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="tbl-btn tbl-del" onclick="deleteUser(this,'Lina Samir')" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:.75rem;color:var(--muted);">Showing 5 of <span id="totalUsers2">48</span> users</span>
+              <button onclick="openAddUserModal()" style="font-size:.78rem;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:700;">+ Add User</button>
+            </div>
+          </div>
+
+          <!-- PENDING SIDEBAR -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Pending Approvals</div><span style="font-size:.7rem;background:rgba(245,158,11,.15);color:var(--accent);padding:3px 8px;border-radius:20px;font-weight:700;" id="pendingBadge">5 items</span></div>
+            <div id="pendingList">
+           
+              <div class="pending-item">
+                <div class="pi-header"><span class="pi-name">New User: Omar Fady</span><span class="pi-type pt-project">Registration</span></div>
+                <div class="pi-desc">New account awaiting activation</div>
+                <div class="pi-actions">
+                  <button class="btn-approve" onclick="approveItem(this,'Omar Fady registration')">✓ Activate</button>
+                  <button class="btn-reject" onclick="rejectItem(this,'Omar Fady registration')">✗ Deny</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ANALYTICS SECTION ===== -->
+      <div class="section-page" id="section-analytics">
+        <div class="card" style="margin-bottom:22px;">
+          <div class="card-title" style="margin-bottom:20px;">Platform Performance</div>
+          <div class="analytics-row"><span class="analytics-label">User Retention</span><div class="analytics-bar-bg"><div class="analytics-bar-fill" style="width:82%;background:linear-gradient(90deg,var(--accent),#f97316);"></div></div><span class="analytics-val pos">82%</span></div>
+          <div class="analytics-row"><span class="analytics-label">Project Completion</span><div class="analytics-bar-bg"><div class="analytics-bar-fill" style="width:67%;background:linear-gradient(90deg,var(--blue),#06b6d4);"></div></div><span class="analytics-val pos">67%</span></div>
+          <div class="analytics-row"><span class="analytics-label">Application Rate</span><div class="analytics-bar-bg"><div class="analytics-bar-fill" style="width:91%;background:linear-gradient(90deg,var(--green),#10b981);"></div></div><span class="analytics-val pos">91%</span></div>
+          <div class="analytics-row"><span class="analytics-label">Skill Verification</span><div class="analytics-bar-bg"><div class="analytics-bar-fill" style="width:55%;background:linear-gradient(90deg,#7c3aed,#a855f7);"></div></div><span class="analytics-val">55%</span></div>
+          <div class="analytics-row"><span class="analytics-label">Churn Rate</span><div class="analytics-bar-bg"><div class="analytics-bar-fill" style="width:12%;background:linear-gradient(90deg,var(--red),#f87171);"></div></div><span class="analytics-val neg">12%</span></div>
+        </div>
+        <div class="admin-grid">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:16px;">Top Contributors</div>
+            <table><thead><tr><th>User</th><th>Points</th><th>Projects</th></tr></thead><tbody>
+              <tr><td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#2563eb,#06b6d4);font-size:.65rem;">A</div><span style="font-size:.85rem;font-weight:600;">Ahmed Hassan</span></div></td><td style="color:var(--accent);font-weight:700;">2,400</td><td>5</td></tr>
+              <tr><td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#db2777,#f43f5e);font-size:.65rem;">L</div><span style="font-size:.85rem;font-weight:600;">Lina Samir</span></div></td><td style="color:var(--accent);font-weight:700;">1,100</td><td>3</td></tr>
+              <tr><td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#7c3aed,#a855f7);font-size:.65rem;">S</div><span style="font-size:.85rem;font-weight:600;">Sara Elkholy</span></div></td><td style="color:var(--accent);font-weight:700;">850</td><td>3</td></tr>
+              <tr><td><div class="user-cell"><div class="user-av" style="background:linear-gradient(135deg,#059669,#10b981);font-size:.65rem;">N</div><span style="font-size:.85rem;font-weight:600;">Nour Ibrahim</span></div></td><td style="color:var(--accent);font-weight:700;">320</td><td>1</td></tr>
+            </tbody></table>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:16px;">Quick Export</div>
+            <button onclick="exportData('users')" style="width:100%;padding:12px;margin-bottom:10px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:10px;color:var(--blue);font-weight:700;font-size:.82rem;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(37,99,235,.2)'" onmouseout="this.style.background='rgba(37,99,235,.1)'">📋 Export Users CSV</button>
+            <button onclick="exportData('projects')" style="width:100%;padding:12px;margin-bottom:10px;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);border-radius:10px;color:var(--green);font-weight:700;font-size:.82rem;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(5,150,105,.2)'" onmouseout="this.style.background='rgba(5,150,105,.1)'">📁 Export Projects CSV</button>
+            <button onclick="exportData('impact')" style="width:100%;padding:12px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:10px;color:var(--accent);font-weight:700;font-size:.82rem;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(245,158,11,.2)'" onmouseout="this.style.background='rgba(245,158,11,.1)'">⚡ Export Impact Report</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== OTHER SECTIONS (rendered dynamically) ===== -->
+      <div class="section-page" id="section-users">
+        <div class="card"><div class="card-head"><div class="card-title">User Management</div><button onclick="openAddUserModal()" style="padding:8px 16px;background:var(--accent);color:var(--admin);border:none;border-radius:8px;font-weight:800;font-size:.8rem;cursor:pointer;">+ Add User</button></div><p style="color:var(--muted);font-size:.85rem;">Showing all 48 registered users. Use the overview table to manage individual users.</p><div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button onclick="switchSection('overview',null)" style="padding:10px 20px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.82rem;font-weight:600;cursor:pointer;">← Back to Overview</button>
+          <button onclick="openAddUserModal()" style="padding:10px 20px;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);border-radius:10px;color:var(--green);font-size:.82rem;font-weight:600;cursor:pointer;">Add New User</button>
+          <button onclick="exportData('users')" style="padding:10px 20px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:10px;color:var(--blue);font-size:.82rem;font-weight:600;cursor:pointer;">Export All</button>
+        </div></div>
+      </div>
+      <div class="section-page" id="section-projects">
+        <div class="card"><div class="card-head"><div class="card-title">Project Management</div><button onclick="openNewProjectAdmin()" style="padding:8px 16px;background:var(--accent);color:var(--admin);border:none;border-radius:8px;font-weight:800;font-size:.8rem;cursor:pointer;">+ New Project</button></div><div id="adminProjectsList" style="margin-top:8px;">
+          <div style="padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;"><div><strong>Smart Waste Management</strong><div style="font-size:.75rem;color:var(--muted);margin-top:4px;">5 members · In Progress</div></div><div style="display:flex;gap:8px;"><button onclick="showToast('Opening project details...')" style="padding:6px 14px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:8px;color:var(--blue);font-size:.75rem;font-weight:700;cursor:pointer;">View</button><button onclick="showToast('Project archived','warn')" style="padding:6px 14px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:8px;color:var(--red);font-size:.75rem;font-weight:700;cursor:pointer;">Archive</button></div></div>
+          <div style="padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;"><div><strong>Education Platform</strong><div style="font-size:.75rem;color:var(--muted);margin-top:4px;">8 members · Active</div></div><div style="display:flex;gap:8px;"><button onclick="showToast('Opening project details...')" style="padding:6px 14px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:8px;color:var(--blue);font-size:.75rem;font-weight:700;cursor:pointer;">View</button><button onclick="showToast('Project archived','warn')" style="padding:6px 14px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:8px;color:var(--red);font-size:.75rem;font-weight:700;cursor:pointer;">Archive</button></div></div>
+          <div style="padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;"><div><strong>Healthcare Access</strong><div style="font-size:.75rem;color:var(--muted);margin-top:4px;">4 members · Planning</div></div><div style="display:flex;gap:8px;"><button onclick="showToast('Opening project details...')" style="padding:6px 14px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:8px;color:var(--blue);font-size:.75rem;font-weight:700;cursor:pointer;">View</button><button onclick="showToast('Project archived','warn')" style="padding:6px 14px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:8px;color:var(--red);font-size:.75rem;font-weight:700;cursor:pointer;">Archive</button></div></div>
+        </div></div>
+      </div>
+      <div class="section-page" id="section-pending">
+        <div class="card"><div class="card-head"><div class="card-title">All Pending Approvals</div></div><p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Review and act on all pending items below.</p><div id="pendingFullList"></div></div>
+      </div>
+      <div class="section-page" id="section-reports">
+        <div class="card"><div class="card-head"><div class="card-title">Reports</div></div>
+        <div style="display:grid;gap:10px;margin-top:8px;">
+          <button onclick="exportData('monthly')" style="padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.85rem;font-weight:600;cursor:pointer;text-align:left;transition:.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📅 Monthly Impact Report — May 2026</button>
+          <button onclick="exportData('quarterly')" style="padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.85rem;font-weight:600;cursor:pointer;text-align:left;transition:.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📊 Q2 2026 Quarterly Summary</button>
+          <button onclick="exportData('users')" style="padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.85rem;font-weight:600;cursor:pointer;text-align:left;transition:.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">👥 User Engagement Report</button>
+          <button onclick="exportData('projects')" style="padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.85rem;font-weight:600;cursor:pointer;text-align:left;transition:.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📁 Project Completion Analysis</button>
+        </div></div>
+      </div>
+      <div class="section-page" id="section-settings">
+        <div class="card"><div class="card-head"><div class="card-title">Platform Settings</div></div>
+        <div style="display:grid;gap:14px;margin-top:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--surface2);border-radius:10px;">
+            <div><div style="font-size:.88rem;font-weight:700;">Email Notifications</div><div style="font-size:.75rem;color:var(--muted);">Send emails for new applications</div></div>
+            <button onclick="toggleSetting(this)" style="width:44px;height:24px;background:var(--green);border:none;border-radius:12px;cursor:pointer;position:relative;transition:.3s;"><span style="position:absolute;right:3px;top:3px;width:18px;height:18px;background:white;border-radius:50%;display:block;transition:.3s;"></span></button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--surface2);border-radius:10px;">
+            <div><div style="font-size:.88rem;font-weight:700;">Auto-approve Skills</div><div style="font-size:.75rem;color:var(--muted);">Automatically verify low-risk skills</div></div>
+            <button onclick="toggleSetting(this)" style="width:44px;height:24px;background:var(--muted);border:none;border-radius:12px;cursor:pointer;position:relative;transition:.3s;"><span style="position:absolute;left:3px;top:3px;width:18px;height:18px;background:white;border-radius:50%;display:block;transition:.3s;"></span></button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--surface2);border-radius:10px;">
+            <div><div style="font-size:.88rem;font-weight:700;">Public Leaderboard</div><div style="font-size:.75rem;color:var(--muted);">Show rankings publicly</div></div>
+            <button onclick="toggleSetting(this)" style="width:44px;height:24px;background:var(--green);border:none;border-radius:12px;cursor:pointer;position:relative;transition:.3s;"><span style="position:absolute;right:3px;top:3px;width:18px;height:18px;background:white;border-radius:50%;display:block;transition:.3s;"></span></button>
+          </div>
+          <button onclick="showToast('Settings saved successfully!')" style="padding:12px;background:var(--accent);color:var(--admin);border:none;border-radius:10px;font-weight:800;font-size:.85rem;cursor:pointer;margin-top:4px;">Save Settings</button>
+        </div></div>
+      </div>
+
+    </div><!-- end content -->
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="addUserModal">
+  <div class="modal-box">
+    <div class="modal-title">Add New User</div>
+    <div class="modal-sub">Create a new IMPACT OS account</div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="newUserName" placeholder="e.g. Yasmine Nabil"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="newUserEmail" placeholder="yasmine@impactos.io"></div>
+    <div class="form-group"><label>Role</label>
+      <select id="newUserRole"><option>Contributor</option><option>Viewer</option><option>Admin</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-dismiss" onclick="closeModal('addUserModal')">Cancel</button>
+      <button class="btn-confirm" onclick="addUserToTable()">Add User</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="newProjectAdminModal">
+  <div class="modal-box">
+    <div class="modal-title">Create New Project</div>
+    <div class="modal-sub">Add a new initiative to the platform</div>
+    <div class="form-group"><label>Project Name</label><input type="text" id="adminProjName" placeholder="e.g. Clean Energy Grid"></div>
+    <div class="form-group"><label>Description</label><textarea rows="2" id="adminProjDesc" placeholder="What impact will this project create?"></textarea></div>
+    <div class="form-group"><label>Lead Contributor</label>
+      <select><option>Sara Elkholy</option><option>Ahmed Hassan</option><option>Lina Samir</option><option>Nour Ibrahim</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-dismiss" onclick="closeModal('newProjectAdminModal')">Cancel</button>
+      <button class="btn-confirm" onclick="createAdminProject()">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="userViewModal">
+  <div class="modal-box">
+    <div class="modal-title" id="viewUserTitle">User Profile</div>
+    <div id="viewUserContent" style="margin:16px 0;"></div>
+    <div class="modal-actions"><button class="btn-confirm" onclick="closeModal('userViewModal')">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editUserModal">
+  <div class="modal-box">
+    <div class="modal-title">Edit User</div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="editUserName"></div>
+    <div class="form-group"><label>Role</label><select id="editUserRole"><option>Contributor</option><option>Viewer</option><option>Admin</option></select></div>
+    <div class="form-group"><label>Status</label><select id="editUserStatus"><option>Active</option><option>Inactive</option><option>Pending</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-dismiss" onclick="closeModal('editUserModal')">Cancel</button>
+      <button class="btn-confirm" onclick="saveUserEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="broadcastModal">
+  <div class="modal-box">
+    <div class="modal-title">Broadcast Message</div>
+    <div class="modal-sub">Send a message to all platform users</div>
+    <div class="form-group"><label>Subject</label><input type="text" placeholder="e.g. Platform Maintenance Notice"></div>
+    <div class="form-group"><label>Message</label><textarea rows="4" placeholder="Write your announcement here..."></textarea></div>
+    <div class="form-group"><label>Target Audience</label><select><option>All Users</option><option>Contributors Only</option><option>Admins Only</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-dismiss" onclick="closeModal('broadcastModal')">Cancel</button>
+      <button class="btn-confirm" onclick="sendBroadcast()">Send Broadcast</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="adminProfileModal">
+  <div class="modal-box">
+    <div class="modal-title">Admin Profile</div>
+    <div class="form-group"><label>Name</label><input type="text" value="Ahmed Admin"></div>
+    <div class="form-group"><label>Email</label><input type="email" value="ahmed@impactos.io"></div>
+    <div class="form-group"><label>Current Password</label><input type="password" placeholder="••••••••"></div>
+    <div class="form-group"><label>New Password</label><input type="password" placeholder="Leave blank to keep current"></div>
+    <div class="modal-actions">
+      <button class="btn-dismiss" onclick="closeModal('adminProfileModal')">Cancel</button>
+      <button class="btn-confirm" onclick="closeModal('adminProfileModal');showToast('Profile updated!')">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  const sections = ['overview','users','projects','analytics','pending','reports','settings'];
+  const sectionTitles = { overview:'Overview', users:'User Management', projects:'Projects', analytics:'Analytics', pending:'Pending Approvals', reports:'Reports', settings:'Settings' };
+
+  function switchSection(name, btn) {
+    sections.forEach(s=>{ document.getElementById('section-'+s).classList.remove('active'); });
+    document.getElementById('section-'+name).classList.add('active');
+    document.getElementById('pageTitle').textContent = sectionTitles[name]||name;
+    document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    if(name==='pending') populatePendingFull();
+    closeModal('adminDD'); document.getElementById('adminDD').classList.remove('show');
+  }
+
+  function populatePendingFull() {
+    const src = document.getElementById('pendingList').innerHTML;
+    document.getElementById('pendingFullList').innerHTML = src;
+  }
+
+  let pendingCount = 5;
+  function approveItem(btn, name) {
+    const item = btn.closest('.pending-item');
+    item.style.opacity='0'; item.style.transition='.3s';
+    setTimeout(()=>{ item.remove(); pendingCount=Math.max(0,pendingCount-1); updatePendingCount(); },300);
+    showToast(`Approved: ${name}`);
+  }
+  function rejectItem(btn, name) {
+    const item = btn.closest('.pending-item');
+    item.style.opacity='0'; item.style.transition='.3s';
+    setTimeout(()=>{ item.remove(); pendingCount=Math.max(0,pendingCount-1); updatePendingCount(); },300);
+    showToast(`Rejected: ${name}`,'error');
+  }
+  function updatePendingCount() {
+    document.getElementById('pendingCount').textContent=pendingCount;
+    document.getElementById('pendingBadge').textContent=pendingCount+' items';
+  }
+
+  function filterUsers(q) {
+    document.querySelectorAll('#usersTable tr').forEach(tr=>{
+      const name = tr.getAttribute('data-name')||'';
+      tr.style.display = name.includes(q.toLowerCase()) ? '' : 'none';
+    });
+  }
+
+  function viewUser(name,email,role,status,pts) {
+    document.getElementById('viewUserTitle').textContent=name;
+    const col = {Active:'var(--green)',Inactive:'var(--muted)',Pending:'var(--accent)'}[status];
+    document.getElementById('viewUserContent').innerHTML=`
+      <div style="display:grid;gap:10px;">
+        <div style="display:flex;justify-content:space-between;background:var(--surface2);border-radius:10px;padding:12px;"><span>Email</span><strong>${email}</strong></div>
+        <div style="display:flex;justify-content:space-between;background:var(--surface2);border-radius:10px;padding:12px;"><span>Role</span><strong>${role}</strong></div>
+        <div style="display:flex;justify-content:space-between;background:var(--surface2);border-radius:10px;padding:12px;"><span>Status</span><strong style="color:${col};">${status}</strong></div>
+        <div style="display:flex;justify-content:space-between;background:var(--surface2);border-radius:10px;padding:12px;"><span>Impact Points</span><strong style="color:var(--accent);">${pts}</strong></div>
+      </div>`;
+    openModal('userViewModal');
+  }
+
+  function deleteUser(btn, name) {
+    if(!confirm(`Remove "${name}" from the platform?`)) return;
+    const tr = btn.closest('tr');
+    tr.style.opacity='0'; tr.style.transition='.3s';
+    setTimeout(()=>{ tr.remove(); showToast(`${name} removed`,'error'); },300);
+  }
+
+  function openAddUserModal() { openModal('addUserModal'); }
+  function addUserToTable() {
+    const name = document.getElementById('newUserName').value.trim();
+    const email = document.getElementById('newUserEmail').value.trim();
+    const role = document.getElementById('newUserRole').value;
+    if(!name||!email) { showToast('Please fill in all fields','error'); return; }
+    const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const colors = ['#7c3aed','#2563eb','#059669','#d97706','#db2777'];
+    const bg = colors[Math.floor(Math.random()*colors.length)];
+    const tbody = document.getElementById('usersTable');
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-name', name.toLowerCase());
+    tr.innerHTML=`
+      <td><div class="user-cell"><div class="user-av" style="background:${bg};">${initials}</div><div><div class="user-name">${name}</div><div class="user-email">${email}</div></div></div></td>
+      <td><span class="role-badge ${role==='Admin'?'rb-admin':role==='Viewer'?'rb-viewer':'rb-contrib'}">${role}</span></td>
+      <td><span class="status-dot s-pending"></span>Pending</td>
+      <td style="font-weight:700;color:var(--accent);">0</td>
+      <td><div class="table-actions">
+        <button class="tbl-btn tbl-view" onclick="viewUser('${name}','${email}','${role}','Pending',0)"><i class="fas fa-eye"></i></button>
+        <button class="tbl-btn tbl-edit" onclick="editUser('${name}')"><i class="fas fa-edit"></i></button>
+        <button class="tbl-btn tbl-del" onclick="deleteUser(this,'${name}')"><i class="fas fa-trash"></i></button>
+      </div></td>`;
+    tbody.appendChild(tr);
+    closeModal('addUserModal');
+    showToast(`User "${name}" added!`);
+    document.getElementById('newUserName').value='';
+    document.getElementById('newUserEmail').value='';
+    const tu = parseInt(document.getElementById('totalUsers').textContent)+1;
+    document.getElementById('totalUsers').textContent=tu;
+    document.getElementById('totalUsers2').textContent=tu;
+  }
+
+  function openNewProjectAdmin() { openModal('newProjectAdminModal'); }
+  function createAdminProject() {
+    const name = document.getElementById('adminProjName').value.trim();
+    if(!name) { showToast('Enter a project name','error'); return; }
+    const list = document.getElementById('adminProjectsList');
+    if(list) {
+      const div = document.createElement('div');
+      div.style.cssText='padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;';
+      div.innerHTML=`<div><strong>${name}</strong><div style="font-size:.75px;color:var(--muted);margin-top:4px;">1 member · Planning</div></div><span style="font-size:.72rem;background:rgba(245,158,11,.15);color:var(--accent);padding:3px 8px;border-radius:20px;font-weight:700;">New</span>`;
+      list.appendChild(div);
+    }
+    closeModal('newProjectAdminModal');
+    showToast(`Project "${name}" created!`);
+    document.getElementById('adminProjName').value='';
+  }
+
+  function openBroadcastModal() { openModal('broadcastModal'); }
+  function sendBroadcast() { closeModal('broadcastModal'); showToast('Broadcast sent to all users! 📢'); }
+
+  function openAdminProfile() { document.getElementById('adminDD').classList.remove('show'); openModal('adminProfileModal'); }
+
+  function exportData(type) {
+    const msgs = { users:'Exporting users CSV...', projects:'Exporting projects...', impact:'Generating impact report...', monthly:'Generating monthly report...', quarterly:'Generating Q2 report...', default:'Exporting data...' };
+    showToast((msgs[type]||msgs.default)+' (demo mode)','warn');
+  }
+
+  function toggleSetting(btn) {
+    const isOn = btn.style.background === 'var(--green)' || btn.style.background.includes('059669');
+    btn.style.background = isOn ? 'var(--muted)' : 'var(--green)';
+    const knob = btn.querySelector('span');
+    knob.style.left = isOn ? '3px' : '';
+    knob.style.right = isOn ? '' : '3px';
+    showToast(isOn ? 'Setting disabled' : 'Setting enabled');
+  }
+
+  function toggleAdminDD() { document.getElementById('adminDD').classList.toggle('show'); }
+  function adminLogout() { showToast('Logging out...','error'); setTimeout(()=>{ document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f0e1a;font-family:sans-serif;font-size:1.5rem;color:#f59e0b;font-weight:800;">Logged out. Refresh to sign in again.</div>'; },800); }
+
+  function openModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  document.querySelectorAll('.modal-overlay').forEach(m=>{ m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('show'); }); });
+  document.addEventListener('click',e=>{ if(!e.target.closest('#adminDD')&&!e.target.closest('.admin-pill')) document.getElementById('adminDD').classList.remove('show'); });
+
+  function showToast(msg, type='success') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = 'toast'+(type==='error'?' error':type==='warn'?' warn':'');
+    const icon = type==='error'?'❌':type==='warn'?'⚠️':'✅';
+    t.innerHTML=`<span>${icon}</span><span>${msg}</span>`;
+    c.appendChild(t);
+    setTimeout(()=>{ t.style.opacity='0'; t.style.transition='.3s'; setTimeout(()=>t.remove(),300); },3500);
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+document.getElementById("logoutBtn").addEventListener("click",()=>{
+
+localStorage.removeItem("user");
+
+window.location.href="/";
+
+});
+
+</script>
+</body>
+</html>

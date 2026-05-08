@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Impact Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #4f46e5;
+            --bg-color: #f1f5f9;
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
+            --white: #ffffff;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
+
+        body { background: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* NAVBAR */
+        .navbar { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 8%; background: var(--white); box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+        }
+        .logo-area { display: flex; gap: 12px; align-items: center; }
+        .logo-box { background: var(--primary); color: #fff; padding: 10px; border-radius: 10px; }
+        .btn-gov { background: var(--primary); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        .btn-gov:hover { background: var(--secondary); }
+
+        /* CONTAINER */
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        h2 { font-size: 28px; margin-bottom: 5px; color: var(--primary); }
+        .subtitle { color: var(--text-gray); margin-bottom: 30px; }
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #1e293b;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.3s;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: #10b981;
+}
+
+.toast.error {
+    background: #ef4444;
+}
+        /* TABS */
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { 
+            padding: 10px 22px; border-radius: 30px; border: 1px solid #cbd5e1; 
+            background: var(--white); cursor: pointer; transition: 0.3s; font-weight: 500;
+        }
+        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* MAIN CARD */
+        .main-card { background: var(--white); padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 400px; }
+        
+        /* METRICS */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .metric-box { padding: 25px; border-radius: 15px; color: #fff; position: relative; overflow: hidden; }
+        .metric-box h2 { color: white; font-size: 32px; margin-top: 5px; }
+        .metric-box i { position: absolute; right: -5px; bottom: -5px; opacity: 0.2; font-size: 70px; }
+        
+        .purple { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .blue { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        /* CONTENT ELEMENTS */
+        .report { margin-top: 15px; padding: 18px; border-left: 4px solid var(--secondary); background: #f8fafc; border-radius: 8px; border-top: 1px solid #edf2f7; }
+        .card { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .badge { padding: 4px 12px; background: #e2e8f0; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        
+        /* FORM STYLES */
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; }
+        .actions { margin-top: 15px; display: flex; gap: 10px; }
+        .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn.dark {
+    background: var(--primary);
+    color: white;
+}        .btn.light { background: #e2e8f0; color: var(--primary); }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+    </style>
+</head>
+<body>
+<div class="navbar"> <div class="logo-area"> <div class="logo-box"><i class="fa fa-file"></i></div> <div> <h3>Government Portal</h3> <small>IMPACT OS</small> </div> </div><button id="logoutBtn" class="btn-gov">
+<i class="fa fa-sign-out-alt"></i> Logout
+</button></div>
+
+<div class="container">
+    <h2>Government Dashboard</h2>
+    <p class="subtitle">Manage and monitor national impact initiatives</p>
+
+    <div class="tabs" id="tabs-container">
+        <button class="tab-btn active" data-target="Impact Reports">Impact Reports</button>
+        <button class="tab-btn" data-target="Strategic Projects">Strategic Projects</button>
+        <button class="tab-btn" data-target="Local Needs">Local Needs</button>
+        <button class="tab-btn" data-target="National Problems">National Problems</button>
+    </div>
+
+    <div class="main-card">
+        <div id="content-area">
+            </div>
+    </div>
+</div>
+
+<script>
+    const contentArea = document.getElementById("content-area");
+    const tabs = document.querySelectorAll(".tab-btn");
+
+    const pages = {
+        "Impact Reports": `
+            <div class="metrics-grid">
+                <div class="metric-box purple"><p>Total Projects</p><h2>1,247</h2><i class="fa fa-chart-line"></i></div>
+                <div class="metric-box blue"><p>People Impacted</p><h2>45,892</h2><i class="fa fa-users"></i></div>
+                <div class="metric-box orange"><p>Economic Impact</p><h2>$2.3M</h2><i class="fa fa-dollar-sign"></i></div>
+            </div>
+            <div class="report"><b>Education Initiative</b> - Cairo Governorate</div>
+            <div class="report"><b>Clean Water Project</b> - Giza Region</div>
+            <div class="report"><b>SME Grant Program</b> - Alexandria</div>
+        `,
+
+        "Strategic Projects": `
+            <div class="card">
+                <h3>National Digital Literacy Program</h3>
+                <p style="color: var(--text-gray)">Training 10,000 youth across all governorates</p>
+                <div style="margin: 10px 0;"><span class="badge">Budget: $450,000</span></div>
+                <div class="actions">
+                    <button class="btn light">Reject</button>
+                    <button class="btn dark">Approve Project</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Healthcare Mobile Clinics</h3>
+                <p style="color: var(--text-gray)">Serving remote villages in Delta Region</p>
+                <div style="margin: 10px 0;"><span class="badge" style="background: #dcfce7; color: #166534;">Approved</span></div>
+            </div>
+        `,
+
+        "Local Needs": `
+            <div class="card">
+                <div style="display:flex; justify-content:space-between;">
+                    <h3>Public Transportation Improvement</h3>
+                    <span class="badge" style="background: #fee2e2; color: #991b1b;">High Priority</span>
+                </div>
+                <p>📍 Aswan - Need for improved bus routes in suburban areas</p>
+                <div class="actions">
+                    <button class="btn light">Ignore</button>
+                    <button class="btn dark">Validate Need</button>
+                </div>
+            </div>
+            <div class="card">
+                <div style="display:flex; justify-content:space-between;">
+                    <h3>Waste Management System</h3>
+                    <span class="badge" style="background: #fef3c7; color: #92400e;">Critical</span>
+                </div>
+                <p>📍 Luxor - Modern recycling infrastructure needed</p>
+                <div class="actions">
+                    <button class="btn light">Ignore</button>
+                    <button class="btn dark">Validate Need</button>
+                </div>
+            </div>
+        `,
+
+        "National Problems": `<form id="problemForm">
+    <input type="text" name="title" placeholder="Problem Title" required>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <input type="text" name="category" placeholder="Category" required>
+        <input type="text" name="region" placeholder="Affected Region" required>
+    </div>
+
+    <textarea rows="4" name="description" placeholder="Full Description" required></textarea>
+
+    <div class="actions">
+        <button class="btn dark" type="submit">Submit Report</button>
+        <button class="btn light" type="button">Save Draft</button>
+    </div>
+</form>
+                <div class="card"> <h3>Recently Added Problems</h3> <div class="item"> <div><b>Youth Unemployment Crisis</b><br><span>12 submissions</span></div> <span class="badge">Active</span> </div> <div class="item"> <div><b>Climate Change Adaptation</b><br><span>8 submissions</span></div> <span class="badge">Review</span> </div>
+            </div>
+        `
+    };
+function showToast(message, type = "success") {
+    const toast = document.getElementById("toast");
+
+    toast.innerText = message;
+    toast.className = `toast show ${type}`;
+
+    setTimeout(() => {
+        toast.className = "toast";
+    }, 3000);
+}
+// Function to switch tabs
+    function switchTab(tabName) {
+        // Update button UI
+        tabs.forEach(t => t.classList.remove("active"));
+        const activeTab = Array.from(tabs).find(t => t.getAttribute('data-target') === tabName);
+        if(activeTab) activeTab.classList.add("active");
+
+        // Update Content
+        contentArea.innerHTML = pages[tabName];
+    }
+
+    // Add event listeners to all tabs
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            const target = tab.getAttribute('data-target');
+            switchTab(target);
+        });
+    });
+
+    // Load initial page
+    switchTab("Impact Reports");
+    document.getElementById("logoutBtn").addEventListener("click",()=>{
+
+localStorage.removeItem("user");
+
+window.location.href="/";
+
+});
+
+</script>
+<script>
+document.addEventListener("submit", async (e) => {
+    if (e.target.id !== "problemForm") return;
+
+    e.preventDefault();
+
+    const form = e.target;
+
+    const data = {
+        title: form.title.value,
+        category: form.category.value,
+        region: form.region.value,
+        description: form.description.value
+    };
+
+    try {
+        const res = await fetch("/problems", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+            showToast("Problem submitted successfully ✅", "success");
+            form.reset();
+        } else {
+            showToast("Failed to submit ❌", "error");
+        }
+
+    } catch (err) {
+        showToast("Server error ❌", "error");
+    }
+});
+
+</script>
+<div id="toast" class="toast"></div>
+
+</body>
+</html>
