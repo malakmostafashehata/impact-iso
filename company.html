@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCorp Solutions - Innovation & Excellence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(90deg, #9333ea, #f97316); /* Purple to Orange */
+            --bg-light: #ffffff;
+            --footer-bg: #2d004d; /* Dark purple/black for footer */
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+        body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar Section */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: white;
+        }
+
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { 
+            background: linear-gradient(135deg, #ec4899, #9333ea); 
+            color: white; padding: 10px; border-radius: 12px; font-size: 20px; 
+        }
+        .logo-text h2 { font-size: 20px; margin: 0; }
+        .logo-text p { font-size: 12px; color: var(--text-muted); }
+
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; }
+        .btn-contact-top { 
+            background: linear-gradient(90deg, #9333ea, #ec4899); 
+            color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; 
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--primary-gradient);
+            padding: 100px 8%;
+            color: white;
+        }
+
+        .hero h1 { font-size: 48px; max-width: 700px; line-height: 1.2; margin-bottom: 20px; }
+        .hero p { font-size: 18px; max-width: 600px; margin-bottom: 40px; opacity: 0.9; }
+        .hero-btns { display: flex; gap: 20px; }
+        .btn-white { background: white; color: #9333ea; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-outline { background: transparent; border: 2px solid white; color: white; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 50px 8%;
+            margin-top: -60px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; margin-bottom: 15px; }
+        .stat-card p { font-size: 14px; color: var(--text-muted); }
+        .stat-card h2 { font-size: 32px; margin: 10px 0; }
+        .stat-card span { font-size: 13px; font-weight: bold; }
+        .up { color: #10b981; }
+
+        /* Who We Are Section */
+        .who-we-are { padding: 80px 8%; display: flex; gap: 50px; }
+        .content-left { flex: 1; }
+        .content-left h2 { font-size: 42px; margin-bottom: 30px; }
+        .content-left p { margin-bottom: 20px; color: var(--text-muted); font-size: 18px; }
+
+.footer{
+background:#111827;
+color:white;
+padding:60px 8%;
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:40px;
+}
+
+.footer a{
+color:#d1d5db;
+text-decoration:none;
+display:block;
+margin-bottom:8px;
+}
+
+.footer a:hover{
+color:white;
+}
+
+.copyright{
+margin-top:40px;
+text-align:center;
+opacity:.7;
+}
+        .mission-box { 
+            flex: 1; 
+            background: linear-gradient(135deg, #3b82f6, #06b6d4); 
+            color: white; padding: 40px; border-radius: 20px; 
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .mission-box i { font-size: 40px; }
+        .mission-box h3 { font-size: 28px; }
+
+        .contact-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; padding: 60px 8%; }
+        .c-card { padding: 40px; border-radius: 20px; text-align: center; }
+        .c-card i { font-size: 24px; color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: inline-block; }
+        .c-card.phone { background-color: #e0fcf5; }
+        .c-card.phone i { background-color: #10b981; }
+        .c-card.email { background-color: #f3e8ff; }
+        .c-card.email i { background-color: #a855f7; }
+        .c-card.loc { background-color: #fff7ed; }
+        .c-card.loc i { background-color: #f97316; }
+
+        /* Footer */
+        .footer { background: var(--footer-bg); color: white; padding: 80px 8% 40px; }
+        .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 50px; }
+        .footer-logo h2 { margin-bottom: 15px; }
+        .footer-col h4 { margin-bottom: 25px; font-size: 18px; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; opacity: 0.7; cursor: pointer; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; text-align: center; font-size: 14px; opacity: 0.6; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header & Navbar -->
+    <nav class="navbar">
+        <div class="logo-box">
+            <div class="logo-icon"><i class="fas fa-print"></i></div>
+            <div class="logo-text">
+                <h2>TechCorp Solutions</h2>
+                <p>Innovation & Excellence</p>
+            </div>
+           
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Portfolio</a></li>
+        </ul>
+                  <button id="logoutBtn">
+<i class="fas fa-sign-out-alt"></i> Logout
+</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>Building Tomorrow's Technology Today</h1>
+        <p>We deliver innovative software solutions that transform businesses and drive success in the digital age.</p>
+        <div class="hero-btns">
+            <button class="btn-white"><i class="fas fa-download"></i> Download Report</button>
+            <button class="btn-outline"><i class="far fa-envelope"></i> Contact IR Team</button>
+        </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #10b981;"><i class="fas fa-dollar-sign"></i></div>
+            <p>Revenue</p>
+            <h2>$105M</h2>
+            <span class="up">↑ +47%</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #3b82f6;"><i class="fas fa-chart-line"></i></div>
+            <p>Growth Rate</p>
+            <h2>127%</h2>
+            <span class="up">↑ YoY</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #a855f7;"><i class="fas fa-users"></i></div>
+            <p>Active Users</p>
+            <h2>38.9K</h2>
+            <span class="up">↑ +214%</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f97316;"><i class="fas fa-bullseye"></i></div>
+            <p>Market Share</p>
+            <h2>23%</h2>
+            <span class="up">↑ +8.2%</span>
+        </div>
+    </section>
+
+    <!-- Who We Are Section -->
+    <section class="who-we-are">
+        <div class="content-left">
+            <h2>Who We Are</h2>
+            <p>TechCorp Solutions is a leading technology company specializing in custom software development, digital transformation, and IT consulting services.</p>
+            <p>With over a decade of experience, we've helped businesses of all sizes achieve their digital goals through innovative solutions and cutting-edge technology.</p>
+        </div>
+        <div class="mission-box">
+            <i class="far fa-lightbulb"></i>
+            <h3>Our Mission</h3>
+            <p>To empower businesses with innovative technology solutions that drive efficiency, growth, and sustainable competitive advantage.</p>
+        </div>
+    </section>
+
+    <!-- Contact Info Section -->
+    <section class="contact-cards">
+        <div class="c-card phone">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Phone</h3>
+            <p style="margin-top:10px; color:#64748b;">+1 (555) 123-4567</p>
+        </div>
+        <div class="c-card email">
+            <i class="far fa-envelope"></i>
+            <h3>Email</h3>
+            <p style="margin-top:10px; color:#64748b;">info@techcorp.com</p>
+        </div>
+        <div class="c-card loc">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Location</h3>
+            <p style="margin-top:10px; color:#64748b;">123 Tech Street, San Francisco, CA</p>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-logo">
+                <div class="logo-box" style="margin-bottom:20px;">
+                    <div class="logo-icon"><i class="fas fa-print"></i></div>
+                    <h2 style="color:white; margin-left:10px;">TechCorp</h2>
+                </div>
+                <p style="opacity:0.7;">Leading technology solutions provider since 2016</p>
+            </div>
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul>
+                    <li>Software Development</li>
+                    <li>Cloud Solutions</li>
+                    <li>IT Consulting</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li>About Us</li>
+                    <li>Careers</li>
+                    <li>Blog</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li>Privacy Policy</li>
+                    <li>Terms of Service</li>
+                    <li>Cookie Policy</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 TechCorp Solutions. All rights reserved.
+        </div>
+    </footer>
+<script>
+
+document.getElementById("logoutBtn").addEventListener("click",()=>{
+
+localStorage.removeItem("user");
+
+window.location.href="/";
+
+});
+
+</script>
+</body>
+</html>

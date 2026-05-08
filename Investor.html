@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor Relations - Mentor OS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+/* ======================
+   ROOT COLORS
+====================== */
+
+:root{
+--gradient:linear-gradient(90deg,#6a11cb,#ff0080,#ff8c00);
+--bg:#f4f6fb;
+--card:#ffffff;
+--text:#1f2937;
+--muted:#6b7280;
+--shadow:0 10px 30px rgba(0,0,0,.08);
+
+--green:#00b894;
+--blue:#0984e3;
+--orange:#e17055;
+--purple:#6c5ce7;
+}
+
+/* ======================
+   GLOBAL
+====================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,Segoe UI,sans-serif;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+}
+
+/* ======================
+   HERO
+====================== */
+
+.hero{
+background:var(--gradient);
+color:white;
+padding:80px 30px;
+}
+
+.hero-content{
+max-width:1200px;
+margin:auto;
+}
+
+.hero h1{
+font-size:3rem;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.hero p{
+opacity:.9;
+font-size:1.1rem;
+}
+
+/* ======================
+   CONTAINER
+====================== */
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:40px 20px;
+}
+
+/* ======================
+   METRICS
+====================== */
+
+.footer{
+background:#111827;
+color:white;
+padding:60px 8%;
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:40px;
+}
+
+.footer a{
+color:#d1d5db;
+text-decoration:none;
+display:block;
+margin-bottom:8px;
+}
+
+.footer a:hover{
+color:white;
+}
+
+.copyright{
+margin-top:40px;
+text-align:center;
+opacity:.7;
+}
+.metrics-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+margin-top:-60px;
+}
+
+.metric-card{
+background:var(--card);
+padding:25px;
+border-radius:16px;
+box-shadow:var(--shadow);
+transition:.3s;
+}
+
+.metric-card:hover{
+transform:translateY(-6px);
+}
+
+.icon-box{
+width:48px;
+height:48px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+margin-bottom:15px;
+font-size:1.2rem;
+}
+
+.green-bg{background:var(--green);}
+.blue-bg{background:var(--blue);}
+.orange-bg{background:var(--orange);}
+.purple-bg{background:var(--purple);}
+
+.metric-label{
+color:var(--muted);
+font-size:.9rem;
+}
+
+.metric-value{
+font-size:2rem;
+font-weight:700;
+margin:6px 0;
+}
+
+.metric-growth{
+color:var(--green);
+font-weight:600;
+}
+
+/* ======================
+   CHARTS
+====================== */
+
+.charts-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(450px,1fr));
+gap:25px;
+margin-top:40px;
+}
+
+.chart-card{
+background:var(--card);
+padding:25px;
+border-radius:16px;
+box-shadow:var(--shadow);
+}
+
+.chart-card h3{
+margin-bottom:5px;
+}
+
+.chart-card p{
+color:var(--muted);
+margin-bottom:20px;
+}
+
+.chart-placeholder{
+height:250px;
+background:
+linear-gradient(transparent 90%,#eee 10%),
+linear-gradient(90deg,transparent 90%,#eee 10%);
+background-size:40px 40px;
+display:flex;
+align-items:flex-end;
+justify-content:space-around;
+padding:10px;
+}
+
+/* ======================
+   PROJECTS
+====================== */
+
+.projects{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+margin-top:25px;
+}
+
+.card{
+background:var(--card);
+padding:22px;
+border-radius:14px;
+box-shadow:var(--shadow);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.card h3{
+margin-bottom:8px;
+}
+
+.card p{
+color:var(--muted);
+}
+
+/* ======================
+   BUTTONS
+====================== */
+
+button{
+margin-top:15px;
+padding:10px 18px;
+border:none;
+border-radius:8px;
+background:var(--gradient);
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-2px);
+opacity:.9;
+}
+
+/* ======================
+   DETAILS PANEL
+====================== */
+
+#details{
+display:none;
+margin-top:30px;
+background:white;
+padding:25px;
+border-radius:14px;
+box-shadow:var(--shadow);
+animation:fade .4s ease;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* ======================
+   TOAST
+====================== */
+
+#toast{
+position:fixed;
+bottom:25px;
+right:25px;
+background:#111827;
+color:white;
+padding:14px 18px;
+border-radius:10px;
+box-shadow:var(--shadow);
+display:none;
+animation:fade .4s ease;
+}
+
+/* ======================
+   RESPONSIVE
+====================== */
+
+@media(max-width:768px){
+.hero h1{
+font-size:2.2rem;
+}
+
+.charts-container{
+grid-template-columns:1fr;
+}
+}
+#logoutBtn{
+position:absolute;
+top:25px;
+right:30px;
+background:white;
+color:#ff0080;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+#logoutBtn:hover{
+transform:translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Investor Relations</h1>
+            <p>Building the future with sustainable growth and innovation</p>
+           <button id="logoutBtn">
+<i class="fas fa-sign-out-alt"></i> Logout
+</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="icon-box green-bg"><i class="fas fa-dollar-sign"></i></div>
+                <div class="metric-label">Revenue</div>
+                <div class="metric-value">$105M</div>
+                <div class="metric-growth growth-up">↑ +47%</div>
+            </div>
+            <div class="metric-card">
+                <div class="icon-box blue-bg"><i class="fas fa-chart-line"></i></div>
+                <div class="metric-label">Growth Rate</div>
+                <div class="metric-value">127%</div>
+                <div class="metric-growth growth-up">↑ YoY</div>
+            </div>
+            <div class="metric-card">
+                <div class="icon-box purple-bg"><i class="fas fa-users"></i></div>
+                <div class="metric-label">Active Users</div>
+                <div class="metric-value">38.9K</div>
+                <div class="metric-growth growth-up">↑ +214%</div>
+            </div>
+            <div class="metric-card">
+                <div class="icon-box orange-bg"><i class="fas fa-bullseye"></i></div>
+                <div class="metric-label">Market Share</div>
+                <div class="metric-value">23%</div>
+                <div class="metric-growth growth-up">↑ +8.2%</div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Revenue & Profit</h3>
+                <p>Quarterly performance in millions</p>
+                <div class="chart-placeholder">
+                    <svg viewBox="0 0 400 200" style="width: 100%; height: 100%;">
+                        <path d="M0,200 L50,160 L100,170 L150,130 L200,140 L250,90 L300,100 L350,50 L400,60 L400,200 Z" 
+                              fill="rgba(255, 0, 128, 0.1)" stroke="#ff0080" stroke-width="3"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>User Growth</h3>
+                <p>Monthly active users</p>
+                <div class="chart-placeholder">
+                    <div class="bar bar-orange" style="height: 30%;"></div>
+                    <div class="bar bar-orange" style="height: 45%;"></div>
+                    <div class="bar bar-orange" style="height: 55%;"></div>
+                    <div class="bar bar-orange" style="height: 70%;"></div>
+                    <div class="bar bar-orange" style="height: 85%;"></div>
+                    <div class="bar bar-orange" style="height: 95%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="container">
+
+<h2>Projects</h2>
+
+<div class="projects">
+
+<div class="card">
+<h3>Smart Agriculture</h3>
+<p>AI farming system</p>
+<button onclick="openDetails('p1')">Details</button>
+</div>
+
+<div class="card">
+<h3>Green Energy</h3>
+<p>Solar solutions</p>
+<button onclick="openDetails('p2')">Details</button>
+</div>
+
+<div class="card">
+<h3>Health AI</h3>
+<p>Medical diagnosis AI</p>
+<button onclick="openDetails('p3')">Details</button>
+</div>
+
+</div>
+
+<div id="details"></div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const projects = {
+p1:{
+title:"Smart Agriculture",
+desc:"AI analyzes soil and crops",
+team:"Engineers + Data Scientists"
+},
+p2:{
+title:"Green Energy",
+desc:"Solar grid system for villages",
+team:"Energy Experts"
+},
+p3:{
+title:"Health AI",
+desc:"AI medical diagnosis system",
+team:"Doctors + AI Engineers"
+}
+};
+
+function openDetails(id){
+
+const p = projects[id];
+
+const box = document.getElementById("details");
+
+box.style.display = "block";
+
+box.innerHTML = `
+<h2>${p.title}</h2>
+<p>${p.desc}</p>
+<p><b>Team:</b> ${p.team}</p>
+
+<button onclick="meet()">Meet this Project</button>
+`;
+}
+
+function meet(){
+
+const toast = document.getElementById("toast");
+
+toast.innerText = "We will contact you soon ✅";
+toast.style.display = "block";
+
+setTimeout(()=>{
+toast.style.display = "none";
+},3000);
+}
+
+</script>
+<footer class="footer"> <div class="footer-container"> <div> <h3>IMPACT OS</h3> <p> Intelligent National Impact & Employment Operating System connecting skills, innovation, and employment opportunities. </p> </div> <div> <h4>Platform</h4> <a href="#problem">Problem</a>
+<a href="#solution">Solution</a>
+<a href="#Key Objectives
+">Key Objectives
+</a>
+
+<a href="#Platform Capabilities">Platform Capabilities
+</a>
+
+<a href="#reviews">Reviews</a>
+<a href="#contact">Contact Form</a>
+<a href="register.html">Register</a></div> <div> <h4>Contact</h4> <a href="#">Email</a> <a href="#">LinkedIn</a> <a href="#">Support</a> </div> <div> <h4>Follow Us</h4> <div class="social"> <i class="fab fa-linkedin"></i> <i class="fab fa-twitter"></i> <i class="fab fa-github"></i> </div> </div> </div> <div class="copyright"> © 2026 IMPACT OS — All Rights Reserved </div> </footer>
+<script>
+
+document.getElementById("logoutBtn").addEventListener("click",()=>{
+
+localStorage.removeItem("user");
+
+window.location.href="/";
+
+});
+
+</script>
+</body>
+</html>
