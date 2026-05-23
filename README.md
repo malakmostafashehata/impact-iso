@@ -1,66 +1,54 @@
-# 🚀 IMPACT OS (Intelligent National Impact & Employment Operating System)
+# 🚀 IMPACT OS
 
-## 📌 Project Overview
-IMPACT OS is an AI-driven platform designed to connect individuals, organizations, companies, investors, mentors, and government entities in one unified ecosystem.
+## 📌 Overview
+IMPACT OS is an intelligent platform designed to connect individuals, companies, investors, mentors, and government entities using AI-based recommendations for skills, jobs, and project matching.
 
-The system analyzes user skills, recommends opportunities, forms intelligent teams, and evaluates social and economic impact to transform ideas into real-world projects and employment opportunities.
+This version is implemented using **Node.js** with a lightweight **SQLite database**.
 
 ---
 
-## 🎯 Key Features
+## 🛠️ Tech Stack
+- Node.js
+- Express.js
+- SQLite (database.db)
+- JavaScript (Frontend logic)
+- HTML / CSS
+
+---
+
+## 📂 Project Structure
+- server.js → Main backend server
+- database.db → SQLite database
+- package.json → Project dependencies
+- docs/ → Documentation files
+
+---
+
+## ⚙️ Features
 
 ### 👤 User System
-- Registration and authentication
-- Role-based access (Employee, Investor, Mentor, Company, Government, Admin)
+- Registration & login
+- Role-based access control
 
-### 🧠 AI Engine
-- Skill analysis and matching
-- Job and project recommendations
-- Smart team formation
-- Impact prediction
+### 🧠 AI Logic (Rule-based)
+- Skill matching
+- Project suggestions
+- Job recommendations
 
 ### 📁 Project Management
 - Create and manage projects
-- Track progress and milestones
-- Submit community problems and solutions
+- Track progress
 
 ### 💰 Funding System
-- Investors can review and approve funding requests
-- Project evaluation and decision support
+- Investor review system
 
-### 📊 Impact Measurement
-- Tracks social and economic impact of projects
-- Generates impact reports
-
-### 🏢 Multi-Role Dashboard
-- Personalized interface for each user type
-- Admin control panel for system management
+### 📊 Impact Tracking
+- Measures project outcomes
 
 ---
 
-## 🛠️ Technologies Used
-- PHP (Backend)
-- MySQL (Database)
-- HTML, CSS, JavaScript (Frontend)
-- AI-based recommendation logic (conceptual/ML-ready architecture)
-- REST APIs (integration layer)
+## 🚀 How to Run
 
----
-
-## 🧩 System Architecture
-IMPACT OS is built as a modular system consisting of:
-
-- User Management Module  
-- AI Decision Engine  
-- Project Lifecycle Module  
-- Funding & Evaluation Module  
-- Employment Recommendation Module  
-- Admin Control Module  
-
----
-
-## ⚙️ Installation & Setup
-
-1. Clone the repository:
+1. Install dependencies:
 ```bash
-git clone https://github.com/your-username/impact-os.git
+npm install
